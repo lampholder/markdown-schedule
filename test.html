@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth with PKCE</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        const CLIENT_ID = "471901108526-r2u5cc9s93t8f5mh44305t7detdoa3a8.apps.googleusercontent.com"
+        const REDIRECT_URI = 'https://schedule.lant.uk/test.html'; // Your redirect URI
+        const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'; // Scope for accessing Google Calendar
+
+        function handleAuthClick(event) {
+            gapi.auth.authorize({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                immediate: false,
+                response_type: 'code',
+                redirect_uri: REDIRECT_URI
+            }, handleAuthResult);
+            return false;
+        }
+
+        function handleAuthResult(authResult) {
+            if (authResult && !authResult.error) {
+                // User authorized successfully, extract authorization code from response
+                const authorizationCode = authResult.code;
+
+                // Now you can exchange the authorization code for an access token on your backend server
+                // or using an AJAX request to your token endpoint
+                console.log('Authorization code:', authorizationCode);
+            } else {
+                // User canceled authorization or an error occurred
+                console.error('Authorization error:', authResult.error);
+            }
+        }
+
+        function init() {
+            gapi.load('auth', function () {
+                // Initialize the OAuth 2.0 client library
+                gapi.auth.init(function () {
+                    // Call handleAuthClick function when the user clicks on the login button
+                    document.getElementById('loginButton').addEventListener('click', handleAuthClick);
+                });
+            });
+        }
+    </script>
+</head>
+<body onload="init()">
+    <button id="loginButton">Login with Google</button>
+</body>
+</html>
+
