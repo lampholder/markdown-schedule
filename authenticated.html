@@ -1,0 +1,50 @@
+<script src="https://apis.google.com/js/api.js"></script>
+
+<script type="text/javascript">
+
+gapi.load('auth2', function() {
+  gapi.auth2.init({
+    client_id: '471901108526-r2u5cc9s93t8f5mh44305t7detdoa3a8.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/calendar.readonly'
+  }).then(function() {
+    // Your authentication logic here
+    var authInstance = gapi.auth2.getAuthInstance();
+    authInstance.signIn().then(function() {
+      // Access token is available
+      var accessToken = authInstance.currentUser.get().getAuthResponse().access_token;
+      // Make API requests with the access token
+    });
+  });
+});
+
+</script>
+
+  function initClient() {
+    // Initialize the API client library
+    gapi.client.init({
+      apiKey: 'YOUR_API_KEY',
+      clientId: 'YOUR_CLIENT_ID',
+      discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+      scope: 'https://www.googleapis.com/auth/calendar.readonly',
+    }).then(function() {
+      // Your code here
+      // Now gapi.client is available for use
+    });
+  }
+
+  // Load the API client library
+  gapi.load('client', initClient);
+
+  gapi.client.calendar.events.list({
+    'calendarId': 'primary',
+    'timeMin': (new Date()).toISOString(),
+    'showDeleted': false,
+    'singleEvents': true,
+    'maxResults': 10,
+    'orderBy': 'startTime'
+  }).then(function(response) {
+    var events = response.result.items;
+    // Process the calendar events as needed
+  });
+  
+</script>
